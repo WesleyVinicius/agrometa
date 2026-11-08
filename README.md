@@ -2,6 +2,24 @@
 
 Framework de integração semântica que opera como um motor de triplificação (ETL Semântico) para harmonizar metadados agrometeorológicos. O projeto unifica dados biológicos (ocorrências de pragas), matrizes climáticas e metadados de proveniência em um Grafo de Conhecimento (RDF) interligado.
 
+> **v1.0.0**: versão correspondente ao código avaliado na dissertação de mestrado.
+
+*English summary: AgroMeta is a semantic ETL framework (FastAPI + RDFLib) that harmonizes agrometeorological metadata (ISO 19115, Darwin Core, WCMP 2) into an interlinked RDF knowledge graph, using AGROVOC, GeoSPARQL, SOSA and OWL-Time.*
+
+## Demonstração
+
+![Swagger UI da API AgroMeta](docs/images/swagger.png)
+
+## Origem acadêmica
+
+Este software foi desenvolvido na dissertação de mestrado do Programa de Pós-Graduação em Computação Aplicada da Universidade Estadual de Ponta Grossa (UEPG).
+
+- Dissertação: [Framework para integração de padrões de metadados agrometeorológicos](https://ri.uepg.br/handle/123456789/5880)
+
+**Como citar:**
+
+FERNANDES, Wesley Vinicius. Framework para integração de padrões de metadados agrometeorológicos. 2026. Dissertação (Mestrado em Computação Aplicada) - Universidade Estadual de Ponta Grossa, Ponta Grossa, 2026.
+
 ## Tecnologias
 - Python, FastAPI
 - RDFLib, Pandas, xml.etree
@@ -10,7 +28,7 @@ Framework de integração semântica que opera como um motor de triplificação 
 - Protégé (HermiT Reasoner) e GraphDB
 
 ## Pré-requisitos
-- Python 3.9+ instalado
+- Python 3.12+ instalado
 - Gerenciador de pacotes `pip`
 - Acesso à internet para requisições de desambiguação ao endpoint SPARQL oficial da FAO
 - GraphDB (opcional, para visualização e execução de consultas lógicas no grafo resultante)
@@ -20,7 +38,7 @@ Framework de integração semântica que opera como um motor de triplificação 
 Clone o repositório para a sua máquina local:
 ```bash
 
-git clone https://github.com/seu-usuario/agrometa.git
+git clone https://github.com/WesleyVinicius/agrometa.git
 cd agrometa
 ```
 
@@ -87,6 +105,27 @@ Para rodar os testes analíticos práticos e Questões de Competência (CQs):
 1. Importe o arquivo `grafo_final_api_integrated.ttl` (gerado na pasta `resultados/`) para o **GraphDB**.
 2. Execute consultas **SPARQL** para testar correlações ambientais (ex: incidência de *Spodoptera frugiperda* sob estresse hídrico) e verificar a desambiguação terminológica alcançada.
 
+## Limitações conhecidas (v1.0.0)
+
+Esta versão é a que foi avaliada na dissertação, e estas simplificações foram mantidas de propósito:
+
+- O cruzamento semântico liga **todas** as ocorrências ao mesmo registro meteorológico e ao mesmo contexto institucional, sem considerar local nem data.
+- O identificador da estação meteorológica é fixo (`API_GENERATED_STATION`).
+- O CSV do INMET é lido por posição de coluna e espera o formato original do arquivo.
+- O arquivo de saída tem nome fixo e é sobrescrito a cada requisição.
+- A desambiguação depende dos serviços da FAO (AGROVOC). Se estiverem indisponíveis, é gerada uma URI local.
+- Não há limite de tamanho de upload nem testes automatizados, e por isso a versão atual não é indicada para exposição pública.
+
+## Roadmap
+
+As melhorias planejadas estão na [milestone v1.1.0](https://github.com/WesleyVinicius/agrometa/milestones):
+
+- [ ] #6 Testes automatizados e CI
+- [ ] #7 Validação de entradas e limite de upload
+- [ ] #8 Dockerfile e docker-compose (API + GraphDB)
+- [ ] #9 Demo online da API
+- [ ] #10 Cruzamento de ocorrências e observações por local e data
+
 ## Estrutura do Projeto
 ```text
 agrometa/
@@ -100,11 +139,8 @@ agrometa/
 ```
 
 ## Contribuindo
-1. Faça o Fork do projeto
-2. Crie sua Feature Branch (`git checkout -b feature/NovaIntegracao`)
-3. Faça o Commit de suas alterações (`git commit -m 'Adiciona suporte à nova ontologia'`)
-4. Faça o Push para a Branch (`git push origin feature/NovaIntegracao`)
-5. Abra um Pull Request
+
+Sugestões e correções são bem-vindas. Abra uma [issue](https://github.com/WesleyVinicius/agrometa/issues) descrevendo o problema ou a ideia. Para propor código, faça um fork, crie uma branch (`feature/...`, `fix/...` ou `docs/...`) e abra um Pull Request para a `master`.
 
 ## Licença
 Este projeto está licenciado sob a Licença MIT.
